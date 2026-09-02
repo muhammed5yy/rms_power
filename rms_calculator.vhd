@@ -53,19 +53,14 @@ RMS_CALCULATION: process(clk) begin
     if rising_edge(clk) then
       if reset = '1' then
         accumulator <= (others => '0');
---        sample_s    <= (others => '0');
         counter     <= (others => '0');
       else      
         if sample_valid = '1' then
---            sample_s <= std_logic_vector(resize(signed(sample) * signed(sample), 32));
             accumulator <= std_logic_vector(signed(accumulator) + signed(sample_s));
            if counter = "11111111" then
                counter  <= "00000000";
                power <= std_logic_vector(unsigned(accumulator) + resize(unsigned(sample_s), 32)); 
-               accumulator <= (others => '0');
---           elsif counter = "00000001" then
---               accumulator <=  std_logic_vector(signed(accumulator) + signed(sample_s));
---               counter <= std_logic_vector(unsigned(counter) + "00000001");   
+               accumulator <= (others => '0'); 
            else
                counter <= std_logic_vector(unsigned(counter) + "00000001");           
            end if;
